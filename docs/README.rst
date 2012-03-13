@@ -18,17 +18,13 @@ This app should be installed in the same way as other CCHQ apps.  Make it a subm
 Usage
 -----
 
-Generate 10 case submissions with 20 case-properties each:
+Generate 10 case submissions with 20 case-properties and submit it to the local CCHQ instance (via the HTTP pathway):
 
     ./manage.py loadtest 10 20
 
-Generate 10 case submissions with 20 case-properties and submit it to the local CCHQ instance (via the HTTP pathway):
-
-    ./manage.py loadtest 10 20 submit
-
 Generate 10 case submissions with 20 case-properties and submit it to an EXTERNAL CCHQ instance (via the HTTP pathway):
 
-    ./manage.py loadtest 10 20 submit [URL_TO_CCHQ]
+    ./manage.py loadtest 10 20 [--submit=URL_TO_CCHQ]
 
 
 Generate 10 case submissions with 20 case-properties based on a JSON spec:
@@ -40,16 +36,90 @@ Full Usage (all options in brackets are... optional):
 
 	./manage.py loadtest NUM_CASES NUM_PROPERTIES [submit [URL_TO_CCHQ]] [--specfile=PATH_TO_FILE] [--dumppath=FOLDER_FOR_SUBMISSIONS] [--quiet]
 
+Behavior:
+     By default, Load Tester will generate cases and immediately submit them to the local HQ instance.  To specify a different location to submit to use --submit parameter.  To prevent submission and save the cases to disk, use --dumppath (details below).
 
 Options:
-     submit [URL_TO_CCHQ]:
-     	Presence of this keyword causes Load Tester to submit the generated Cases to CCHQ. When URL_TO_CCHQ is used, the submission will be sent to that URL, as opposed to the local hq instance.  Both types of submission will occur via HTTP/S.
+     --submit=URL_TO_CCHQ:
+     	Presence of this keyword causes Load Tester to submit the generated Cases to CCHQ at the url URL_TO_CCHQ, as opposed to the local hq instance.  Both types of submission will occur via HTTP/S.
 
      --specfile=PATH_TO_FILE:
         The specfile is used to indicate property names and values. NUM_PROPERTIES takes precedence over this file.  In other words, if there are 50 properties listed in the spec file but NUM_PROPERTIES is set to 20: Load Tester will only take the first 20 properties listed in the file for case generation.   If --specfile is used, NUM_PROPERTIES is optional (if it is not present all properties in the spec file will be used).
 
      --dumppath=FOLDER_FOR_SUBMISSIONS:
-        By default, the generated cases will be output to inidividual files in the same location as manage.py.  Use FOLDER_FOR_SUBMISSIONS to indicate an alternative location for generated cases.
+        By default all cases will be generated and submitted to HQ.  To prevent this behaviour and just save the files to disk, use this option.  FOLDER_FOR_SUBMISSIONS indicates where the instances should be saved.
 
      --quiet:
         Not interested in a play-by-play?  Use this to simply get a summary note at the end of the run.
+
+
+Specfile Specification
+----------------------
+
+The JSON specfile can be used in two different ways:
+
+#) Specify case-property names to be used and the type of value each property should have (e.g 'number', 'text', 'alphanumeric', 'multiple-choice' etc).  This is the GENERALIZED specfile.
+
+#) Specific exact case-properties and values to be used in the case submission.  No case-property values will be generated automatically.   This is the EXPLICIT specfile.
+
+An example of a generalized specfile::
+
+    {"case": {"mult_select_property": ["select", ["foo", "bar", "baz"]], "numbers_and_letters": ["alphanumberic"], "some_number": ["number", "3", false], "single_select_property": ["1select", ["blue", "green", "red"]]}, "explicit": false}
+
+Note the ``"explicit"`` property is set to ``false``.  An enumeration of property value options and usage can be found later in this document.
+
+An example of a EXPLICIT specfile::
+
+    {
+        "case": [{
+            "some_property_2": 1253569,
+            "some_property_3": "some_value_MCRBSXUZFGHODTPYEKJQI",
+            "some_property_0": "some_value_EMYKHFIGJRQLDCWZ",
+            "some_property_1": "some_value_ESHFYZUXROQLAKGJP",
+            "some_property_4": 3378815
+        }, {
+            "some_property_13": 6175615,
+            "some_property_17": "some_value_GLBADSCMERUPTHYIXZJWVKO",
+            "some_property_10": "JBSAYHLWXKITQEPVOUDMCRF BRTYECWKOFVDPJS MRUVOSJAXYCPTZEHBL MVLSAOQIZT XUYFSPMLQT",
+            "some_property_16": 2059006,
+            "some_property_11": "IDLGVPWHCESKQAJMT OTF SYIOQTRPMVJGAKFUZ PHGKRBOWDJSZEYQMCVTFL",
+            "some_property_14": 0.91117276951102621,
+            "some_property_8": "GVMOQAPZLBCJHWUKEFITY KYSGCTD",
+            "some_property_7": "some_value_M",
+            "some_property_4": "HYVOKLIFEU UCFVWKRMTIJZXPBSDAQOEHLY FWOHQZYBXKEMRVGLACJPSDUIT",
+            "some_property_5": 0.052871670500920565
+        }, {
+            "some_property_2": 0.67020914179633606,
+            "some_property_8": "some_value_ZOAE",
+            "some_property_9": "some_value_MZB",
+            "some_property_18": 0.12217666932399163,
+            "some_property_19": 0.80488290156366116,
+            "some_property_3": "EFRUOLJPHBMKITCVG EXICYVG KV KTWBMQGHVUO VCGRFOEYBKMTULHAZSJQDWXI",
+            "some_property_14": 0.70826222093529201,
+            "some_property_15": 1969444,
+            "some_property_16": 4646759,
+            "some_property_17": 6263176,
+            "some_property_10": 0.33433828214004235,
+            "some_property_11": "SOIVUWGDERJBMPAHC TRIPQJGHCWKLVDB QGHVROJEDSYLAIBUCTFKMWZ CZRGYOQWLBHJXMEPKSTUF YEFV",
+            "some_property_12": 0.12382389137574612,
+            "some_property_13": "KGALDPJYC H JVIZBGCX KTMRPHUDIOQZCLXE QZIERTLYKFMXGPBDCJHO",
+            "some_property_24": "IZDBATSVMFUGRPJCXL KZQWIGSBATMOXDRPF UZ PLDSIQABZOJMFHRWKU",
+            "some_property_1": "some_value_PSWMFQYHB",
+            "some_property_21": "some_value_VPEXFMDLTZCGOBWQHU",
+            "some_property_20": 0.075852861258617676,
+            "some_property_23": 0.64883831308172046,
+            "some_property_22": 0.45205208988349577,
+            "some_property_6": "ULIOYWTJRAHVPXBSDMK FVBKJM CWMYQXEFGKITRBDUALS WJPGUBOIMDLKVZCETSHFAQ",
+            "some_property_7": 5241470,
+            "some_property_4": 1003099,
+            "some_property_5": "KWEGLFVXQRTBDCUYIHAP EQJFUGKCI BYCKVQUPFIJH ITXLFORSM UWRZM",
+            "some_property_0": "TPCYDXHWIVGRLKEFBQ OJIRMXQ TFAWRG"
+        }, {
+            "some_property_2": 5995847,
+            "some_property_0": 0.68106890921833074,
+            "some_property_1": "IGRBZH"
+        }],
+        "explicit": true
+    }
+
+Here we see that ``"explicit"`` is set to ``true``.  This specfile will produce 3 case blocks, each with the properties and values specified in the file.
