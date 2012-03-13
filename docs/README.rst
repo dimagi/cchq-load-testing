@@ -132,3 +132,37 @@ An example of a EXPLICIT specfile::
     }
 
 Here we see that ``"explicit"`` is set to ``true``.  This specfile will produce 3 case blocks, each with the properties and values specified in the file.
+
+
+Property Value Options for Generalized Specfile
+-----------------------------------------------
+
+See the above for an example of a generalized spec file.
+
+In the json specfile the structure would be::
+
+    {
+        "explicit": false,
+        "case": {
+            "SOME_PROPERTY": ["PROPERTY_TYPE", PROPERTY_OPTION_1, PROPERTY_OPTION_2, ...],
+            ...
+        }
+    }
+
+Here is a list of ``PROPERTY_TYPE``s and their usage (Format is ["property-type", [options]] : Description)::
+
+    ["text", LENGTH, VARIABLE_LENGTH?] : Produces text (only with upper and lower case A-Z chars).  LENGTH sets the length the value should be.  if VARIABLE_LENGTH? is set to True, the value generated will vary in length between 1 and LENGTH (inclusive).  LENGTH and VARIABLE_LENGTH? are both optional (but you cannot specify VARIABLE_LENGTH? without specifying LENGTH!).  LENGTH defaults to 10.  VARIABLE_LENGTH? defaults to True.
+    
+    ["alphanumeric", LENGTH, VARIABLE_LENGTH?] : Same as above except with the additional numerical chars.
+    
+    ["number", LENGTH, VARIABLE_LENGTH?] : As above, but only with numbers (integers).
+
+    ["double", LENGTH, VARIABLE_LENGTH?] : As above, but with double number type.
+    
+    ["select", RANDOM?, NUM_OPTIONS, OPTION_LIST] : Choose one from a list of options.  If RANDOM? is True: randomly generates a set of options (set length determined by NUM_OPTIONS). If RANDOM? is False, THE NEXT OPTION MUST BE OPTION_LIST!.  OPTION_LIST is an array of text values: e.g. ["foo", "bar", "bash"].
+
+    ["1select", RANDOM?, NUM_OPTIONS, OPTION_LIST] : As above, but selects between 1 and number_of_items_in_list items (as with a multi-select question).  Result is ' ' seperated string of options.
+
+    ["date", START_DATE, END_DATE] : generates a date between the two range points (inclusive).
+
+    ["datetime", START_DATETIME, END_DATETIME] : As above, but with datetimes.
