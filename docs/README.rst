@@ -64,7 +64,16 @@ The JSON specfile can be used in two different ways:
 
 An example of a generalized specfile::
 
-    {"case": {"mult_select_property": ["select", ["foo", "bar", "baz"]], "numbers_and_letters": ["alphanumberic"], "some_number": ["number", "3", false], "single_select_property": ["1select", ["blue", "green", "red"]]}, "explicit": false}
+    {
+        "case": {
+            "mult_select_property": ["select", ["foo", "bar", "baz"]],
+            "numbers_and_letters": ["alphanumberic"],
+            "some_number": ["number", "3", false],
+            "single_select_property": ["1select", ["blue", "green", "red"]]
+        },
+        "explicit": false
+    }
+
 
 Note the ``"explicit"`` property is set to ``false``.  An enumeration of property value options and usage can be found later in this document.
 
