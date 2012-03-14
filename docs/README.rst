@@ -34,7 +34,7 @@ Generate 10 case submissions with 20 case-properties based on a JSON spec:
 
 Full Usage (all options in brackets are... optional):
 
-	./manage.py loadtest NUM_CASES NUM_PROPERTIES [submit [URL_TO_CCHQ]] [--specfile=PATH_TO_FILE] [--dumppath=FOLDER_FOR_SUBMISSIONS] [--quiet] [--v2]
+	./manage.py loadtest NUM_CASES NUM_PROPERTIES [--submit [URL_TO_CCHQ]] [--specfile=PATH_TO_FILE] [--dumppath=FOLDER_FOR_SUBMISSIONS] [--quiet] [--v2]
 
 Behavior:
      By default, Load Tester will generate cases and immediately submit them to the local HQ instance.  To specify a different location to submit to use --submit parameter.  To prevent submission and save the cases to disk, use --dumppath (details below).
