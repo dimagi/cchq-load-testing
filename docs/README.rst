@@ -69,10 +69,10 @@ An example of a generalized specfile::
 
     {
         "case": {
-            "mult_select_property": ["select", ["foo", "bar", "baz"]],
+            "mult_select_property": ["select", "foo", "bar", "baz"],
             "numbers_and_letters": ["alphanumberic"],
             "some_number": ["number", "3", false],
-            "single_select_property": ["1select", ["blue", "green", "red"]]
+            "single_select_property": ["1select", "blue", "green", "red"]
         },
         "explicit": false
     }
@@ -160,11 +160,11 @@ Here is a list of ``PROPERTY_TYPE``s and their usage (Format is ["property-type"
     
     ["number", LENGTH, VARIABLE_LENGTH?] : As above, but only with numbers (integers).
 
-    ["double", LENGTH, VARIABLE_LENGTH?] : As above, but with double number type.
+    ["double"] : As a random double.
     
-    ["select", RANDOM?, NUM_OPTIONS, OPTION_LIST] : Choose one from a list of options.  If RANDOM? is True: randomly generates a set of options (set length determined by NUM_OPTIONS). If RANDOM? is False, THE NEXT OPTION MUST BE OPTION_LIST!.  OPTION_LIST is an array of text values: e.g. ["foo", "bar", "bash"].
+    ["select", OPTION_LIST] : if OPTION_LIST is not specified: randomly generates a set of options. OPTION_LIST is an array of text values: e.g. ["foo", "bar", "bash"].
 
-    ["1select", RANDOM?, NUM_OPTIONS, OPTION_LIST] : As above, but selects between 1 and number_of_items_in_list items (as with a multi-select question).  Result is ' ' seperated string of options.
+    ["1select", OPTION_LISTS] : As above, but selects between 1 and number_of_items_in_list items (as with a multi-select question).  Result is ' ' seperated string of options.
 
     ["date", START_DATE, END_DATE] : generates a date between the two range points (inclusive).
 
