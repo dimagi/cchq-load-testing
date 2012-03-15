@@ -69,10 +69,10 @@ An example of a generalized specfile::
 
     {
         "case": {
-            "mult_select_property": ["select", ["foo", "bar", "baz"]],
+            "mult_select_property": ["select", "foo", "bar", "baz"],
             "numbers_and_letters": ["alphanumberic"],
             "some_number": ["number", "3", false],
-            "single_select_property": ["1select", ["blue", "green", "red"]]
+            "single_select_property": ["1select", "blue", "green", "red"]
         },
         "explicit": false
     }
