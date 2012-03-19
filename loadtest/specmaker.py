@@ -18,13 +18,11 @@ def get_double_options():
     return ['double']
 
 def _make_select_list(type):
-    if random.choice([True,False]):
-        ret = []
-        for i in range(random.randint(1,8)):
-            ret.append(_rand_chars(ALPHA,random.randint(1,15)))
-        return [type] + ret
-    else:
-        return [type]
+    ret = []
+    for i in range(random.randint(1,8)):
+        ret.append(_rand_chars(ALPHA,random.randint(1,15)))
+    return [type] + ret
+
 
 def get_select_options():
     return _make_select_list('select')
@@ -61,7 +59,7 @@ def pick_random_func():
         get_datetime_options,
         get_alphanumeric_options
     ]
-    return random.choice(func_list)()
+    return random.choice(func_list)
 
 def getspec(num_props):
     """
@@ -70,7 +68,7 @@ def getspec(num_props):
     spec = {"explicit": False}
     case = {}
     for i in range(num_props):
-        case[get_property_name(i)] = pick_random_func()
+        case[get_property_name(i)] = pick_random_func()()
 
     spec["case"] = case
     return spec

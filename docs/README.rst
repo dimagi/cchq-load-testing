@@ -12,8 +12,11 @@ The tool is provided in the form of a manage.py Django command.  The initial ver
 
 Installation
 ------------
-
 This app should be installed in the same way as other CCHQ apps.  Make it a submodule, add it to installed apps then add in this app specific settings to the settings.py file.  An example settings.py file is provided to demonstrate all the possible settings that can be changed.  All of the settings in the example settings file will have defaults associated with them and so are all entirely optional.
+
+Requirements
+------------
+Python dateutil. use ``pip install 'python-dateutil < 2.0'`` if you're running python 2.x  (dateutil 2.0 and up is for python 3.x).
 
 Usage
 -----
@@ -70,7 +73,7 @@ An example of a generalized specfile::
     {
         "case": {
             "mult_select_property": ["select", "foo", "bar", "baz"],
-            "numbers_and_letters": ["alphanumberic"],
+            "numbers_and_letters": ["alphanumeric"],
             "some_number": ["number", "3", false],
             "single_select_property": ["1select", "blue", "green", "red"]
         },
@@ -162,9 +165,9 @@ Here is a list of ``PROPERTY_TYPE``s and their usage (Format is ["property-type"
 
     ["double"] : As a random double.
     
-    ["select", OPTION_LIST] : if OPTION_LIST is not specified: randomly generates a set of options. OPTION_LIST is an array of text values: e.g. ["foo", "bar", "bash"].
+    ["select1", OPTION_LIST] : if OPTION_LIST is not specified: randomly generates a set of options. OPTION_LIST is an list of text values: e.g. "foo", "bar", "bash".
 
-    ["1select", OPTION_LISTS] : As above, but selects between 1 and number_of_items_in_list items (as with a multi-select question).  Result is ' ' seperated string of options.
+    ["select", OPTION_LISTS] : As above, but selects between 1 and number_of_items_in_list items (as with a multi-select question).  Result is ' ' seperated string of options.
 
     ["date", START_DATE, END_DATE] : generates a date between the two range points (inclusive).
 
