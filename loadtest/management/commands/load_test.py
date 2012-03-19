@@ -6,6 +6,7 @@ from loadtest.casegenerator import CaseGenerator
 import requests
 import json
 import copy
+import xml.dom.minidom #for pretty printing XML
 
 def get_or_default(dic, key,default):
     ret = default
@@ -110,6 +111,12 @@ class Command(BaseCommand):
                     default=None,
                     help='Set the CCHQ Application GUID (for submitting cases to a specific app)'
         ),
+        make_option('--print_xml',
+                    action='store_true',
+                    dest='print_xml',
+                    default=False,
+                    help='Print the submitted XML to console'
+        ),
 
 
     )
@@ -193,6 +200,7 @@ class Command(BaseCommand):
             "post_request": post_request,
         }
         errors = []
+        i = 0
         fail_count = 0
         url = "%s/a/%s/receiver" % (self.host, self.domain)
         if self.app_guid:
@@ -203,7 +211,12 @@ class Command(BaseCommand):
                 self.stderr.write(str(errors))
                 self.stderr.write("Submission failed 3 times, STOPPING")
                 break
-            r = requests.post(url, data=self.cg.to_xform(case), allow_redirects=True, hooks=callback_dict)
+
+            xml_string = self.cg.to_xform(case)
+            if self.options["print_xml"]:
+                xml_case = xml.dom.minidom.parseString(xml_string)
+                self.stdout.write('Case %s:\n%s\n' % (i,xml_case.toprettyxml()))
+            r = requests.post(url, data=xml_string, allow_redirects=True, hooks=callback_dict)
             r.raise_for_status()
             if r.status_code == requests.codes.ok or r.status_code == requests.codes.created or r.status_code == requests.codes.modified:
                 self.stdout.write('Submit Success: %s \n' % str(r.status_code))
@@ -212,7 +225,7 @@ class Command(BaseCommand):
                 fail_count += 1
                 errors.append(r)
                 r.raise_for_status()
-
+            i += 1
         self.stdout.write('\n')
 
         if len(errors):
@@ -258,6 +271,7 @@ class Command(BaseCommand):
         del cg_args["cchq_url"]
         del cg_args["specfile"] #this gets processed into memory before being passed through to CaseGenerator
         del cg_args["app_guid"]
+        del cg_args["print_xml"]
 
         cg = CaseGenerator(
             NUM_CASES,

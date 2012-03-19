@@ -25,38 +25,75 @@ Generate 10 case submissions with 20 case-properties and submit it to the local 
 
     ./manage.py loadtest 10 20
 
-Generate 10 case submissions with 20 case-properties and submit it to an EXTERNAL CCHQ instance (via the HTTP pathway):
+Generate 10 case submissions with 20 case-properties and submit it to an EXTERNAL CCHQ instance (@ a specific domain):
 
-    ./manage.py loadtest 10 20 [--submit=URL_TO_CCHQ]
+    ./manage.py loadtest 10 20 "http://staging.commcarehq.org" mydomain
 
 
 Generate 10 case submissions with 20 case-properties based on a JSON spec:
 
-	./manage.py loadtest 10 20 submit [URL_TO_CCHQ] --specfile=PATH_TO_FILE 
+	./manage.py loadtest 10 20 --specfile=PATH_TO_FILE
 
-
-Full Usage (all options in brackets are... optional):
-
-	./manage.py loadtest NUM_CASES NUM_PROPERTIES [--submit [URL_TO_CCHQ]] [--specfile=PATH_TO_FILE] [--dumppath=FOLDER_FOR_SUBMISSIONS] [--quiet] [--v2]
+See below for details on the spec file.
 
 Behavior:
      By default, Load Tester will generate cases and immediately submit them to the local HQ instance.  To specify a different location to submit to use --submit parameter.  To prevent submission and save the cases to disk, use --dumppath (details below).
 
 Options:
-     --submit=URL_TO_CCHQ:
-     	Presence of this keyword causes Load Tester to submit the generated Cases to CCHQ at the url URL_TO_CCHQ, as opposed to the local hq instance.  Both types of submission will occur via HTTP/S.
+    -v VERBOSITY, --verbosity=VERBOSITY
+                        Verbosity level; 0=minimal output, 1=normal output,
+                        2=all output
+    --settings=SETTINGS   The Python path to a settings module, e.g.
+                        "myproject.settings.main". If this isn't provided, the
+                        DJANGO_SETTINGS_MODULE environment variable will be
+                        used.
+    --pythonpath=PYTHONPATH
+                        A directory to add to the Python path, e.g.
+                        "/home/djangoprojects/myproject".
+    --traceback           Print traceback on exception
+    -s, --submit          Causes Load Tester to submit cases to the specified
+                        url.
+    -f SPECFILE, --specfile=SPECFILE
+                        The specfile is used to indicate property names and
+                        values. NUM_PROPERTIES takes precedence over this
+                        file. In other words, if there are 50 properties
+                        listed in the spec file but NUM_PROPERTIES is set to
+                        20: Load Tester will only take the first 20 properties
+                        listed in the file for case generation. If --specfile
+                        is used, NUM_PROPERTIES is optional (if it is not
+                        present all properties in the spec file will be used).
+    -d DUMPPATH, --dumppath=DUMPPATH
+                        By default all cases will be generated and submitted
+                        to HQ. To prevent this behaviour and just save the
+                        files to disk, use this option. FOLDER_FOR_SUBMISSIONS
+                        indicates where the instances should be saved.
+    --cc-version=CC_VERSION
+                        Set the CC CaseXML version you would like to use.
+                        Should be either "1.0" or "2.0"
+    --user_id=USER_ID     Set the case user ID
+    --creator_id=CREATOR_ID
+                        Set the case creator ID
+    --owner_id=OWNER_ID   Set the owner ID
+    --case_id=CASE_ID     Set the Case ID
+    --case_type=CASE_TYPE
+                        Set the Case Type string
+    --case_name=CASE_NAME
+                        Set the Case Name string
+    --device_id=DEVICE_ID
+                        Set the Device ID uuid
+    --external_id=EXTERNAL_ID
+                        Set the External ID
+    --form_xmlns=FORM_XMLNS
+                        Set the XMLNS of the Form Submission
+    --form_name=FORM_NAME
+                        Set the "name" attribute on the instance
+    --username=USERNAME   Set the submission username (different from user_id?)
+    --app_guid=APP_GUID   Set the CCHQ Application GUID (for submitting cases to
+                        a specific app)
+    --print_xml           Print the submitted XML to console
+    --version             show program's version number and exit
+    -h, --help            show help message and exit
 
-     --specfile=PATH_TO_FILE:
-        The specfile is used to indicate property names and values. NUM_PROPERTIES takes precedence over this file.  In other words, if there are 50 properties listed in the spec file but NUM_PROPERTIES is set to 20: Load Tester will only take the first 20 properties listed in the file for case generation.   If --specfile is used, NUM_PROPERTIES is optional (if it is not present all properties in the spec file will be used).
-
-     --dumppath=FOLDER_FOR_SUBMISSIONS:
-        By default all cases will be generated and submitted to HQ.  To prevent this behaviour and just save the files to disk, use this option.  FOLDER_FOR_SUBMISSIONS indicates where the instances should be saved.
-
-     --quiet:
-        Not interested in a play-by-play?  Use this to simply get a summary note at the end of the run.
-
-     --v2:
-        Use CaseXML Version 2 style Case Blocks.
 
 
 Specfile Specification
@@ -79,6 +116,24 @@ An example of a generalized specfile::
         },
         "explicit": false
     }
+
+It's also possible to include general properties that should be applied to each case (e.g. 'Case Type'). This applies to both Explicit and non-Explicit versions.::
+
+    {
+        "case": {
+            "mult_select_property": ["select", "foo", "bar", "baz"],
+            "numbers_and_letters": ["alphanumeric"],
+            "some_number": ["number", "3", false],
+            "single_select_property": ["1select", "blue", "green", "red"]
+        },
+        "explicit": false,
+        "case_id": "LOOOL",
+        "user_id": "MY_USER_GUID",
+        "DEVICE_ID": "SWEET_ID",
+        "form_name": "testform"
+        "case_type": "My_CASE_TYPE"
+    }
+
 
 
 Note the ``"explicit"`` property is set to ``false``.  An enumeration of property value options and usage can be found later in this document.

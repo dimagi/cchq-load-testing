@@ -70,7 +70,7 @@ class CaseGenerator():
         self.creator_id = generate_user_id() if not creator_id else creator_id
         self.owner_id = generate_user_id() if not owner_id else owner_id
         self.username = username if username else "LOAD_TESTER_CCUSER"
-        self.user_id = user_id
+        self.user_id = generate_user_id() if not user_id else user_id
         self.external_id = external_id or 'LOAD_TESTER_EXTERNAL_ID'
         self.device_id = device_id if device_id else generate_device_id()
         self.cc_version = cc_version
@@ -138,6 +138,20 @@ class CaseGenerator():
                 date_opened = datetime.datetime.now()
             update = self.cases[i] if self.is_explicit else self.get_fresh_propdict()
 
+            d = dict(
+                create=create,
+                date_opened=date_opened,
+                case_id=self.case_id,
+                user_id=self.user_id,
+                owner_id=self.owner_id,
+                case_type=self.case_type,
+                version=self.cc_version,
+                external_id=self.external_id,
+                update=update,
+                date_modified=datetime.datetime.now(),
+                case_name=self.case_name,
+            )
+
             ##### CONSOLE OUTPUT ########################################
             if self.verbosity > 1:
                 print '\nActually generating a case:'
@@ -151,48 +165,13 @@ class CaseGenerator():
             elif self.verbosity == 1:
                 print 'Generating Case.'
             if self.verbosity == 2:
-                d = dict(
-                    create=create,
-                    date_opened=date_opened,
-                    case_id=self.case_id,
-                    user_id=self.user_id,
-                    owner_id=self.owner_id,
-                    case_type=self.case_type,
-                    version=self.cc_version,
-                    external_id=self.external_id,
-                    update=update,
-                    date_modified=datetime.datetime.now(),
-                    case_name=self.case_name,
-                )
                 print 'Whole Dict %s' % d
             ############################################################
             if date_opened:
-                block = CaseBlock(
-                    create=create,
-                    date_opened=date_opened,
-                    case_id=self.case_id,
-                    user_id=self.user_id,
-                    owner_id=self.owner_id,
-                    case_type=self.case_type,
-                    version=self.cc_version,
-                    external_id=self.external_id,
-                    update=update,
-                    date_modified=datetime.datetime.now(),
-                    case_name=self.case_name,
-                )
+                block = CaseBlock(**d)
             else:
-                block = CaseBlock(
-                    create=create,
-                    case_id=self.case_id,
-                    user_id=self.user_id,
-                    owner_id=self.owner_id,
-                    case_type=self.case_type,
-                    version=self.cc_version,
-                    external_id=self.external_id,
-                    update=update,
-                    date_modified=datetime.datetime.now(),
-                    case_name=self.case_name,
-                )
+                del d["date_opened"]
+                block = CaseBlock(**d)
             retcases.append(block)
         return retcases
 
