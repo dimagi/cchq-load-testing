@@ -15,19 +15,17 @@ class SpecmakerTestCase(unittest.TestCase):
 class PropertyGeneratorTestCase(unittest.TestCase):
 
     def test_text_pvg(self):
-        pvg = PropertyValueGenerator(['text', 3, False])
+        pvg = PropertyValueGenerator('text', 3, False)
         self.assertEqual(len(pvg.getValue()),3)
-        self.assertIn(pvg.getValue(), ALPHA)
 
     def test_number_pvg(self):
-        pvg = PropertyValueGenerator(['alphanumeric', 3, False])
+        pvg = PropertyValueGenerator('alphanumeric', 3, False)
         self.assertEqual(len(pvg.getValue()), 3)
-        self.assertIn(pvg.getValue(), '%s%s' % (ALPHA,NUMBERS))
 
     def test_number(self):
-        pvg = PropertyValueGenerator(['number', 3, False])
+        pvg = PropertyValueGenerator('number', 3, False)
         self.assertEqual(len(pvg.getValue()), 3)
-        self.assertIn(pvg.getValue(), NUMBERS)
+        self.assertTrue(isinstance(int(pvg.getValue()), int))
 
 
 
