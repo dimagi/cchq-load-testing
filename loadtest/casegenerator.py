@@ -1,5 +1,5 @@
+from casexml.apps.case.mock import CaseBlock
 from propertygenerartors import PropertyValueGenerator as pvg
-from casexml.apps.case.tests.util import CaseBlock
 from specmaker import getspec, _rand_chars, NUMBERS
 from datetime import date, timedelta
 from xml.etree import ElementTree
